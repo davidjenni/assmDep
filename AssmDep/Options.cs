@@ -12,8 +12,7 @@
             var options = new Options();
 
             options.IncludeSystemAssemblies =false ;
-            options.AssemblyName = @"d:\IS-Shared\Tele\Main\obj\Win32\Debug\MdsReferences\tools\MdsDataAccessClient.dll";
-            //options.AssemblyName = @"d:\IS-Shared\Tele\Main\obj\Win32\Debug\MdsReferences\tools\Storageclientwrapper.dll";
+            options.AssemblyName = @"D:\IS-Shared\Tele\Main\obj\X64\Debug\MdsDataAccessClientRuntime.csproj\tools\MdsDataAccessClient.dll";
             options.Template = @"<file src=""$MdsZipToolsDir$\{0}"" target=""lib\net40"" />";
             return options;
         }
