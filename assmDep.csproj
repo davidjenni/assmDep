@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net6.0;net48</TargetFrameworks>
+    <LangVersion>9.0</LangVersion>
+    <!-- <Nullable>enable</Nullable> -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="assmDep.Test\**" />
+    <EmbeddedResource Remove="assmDep.Test\**" />
+    <None Remove="assmDep.Test\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+  </ItemGroup>
+
+</Project>
