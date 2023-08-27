@@ -1,0 +1,28 @@
+name: PullRequest
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ windows-latest ]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup dotnetCore environment
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+
+    - name: Build
+      run: |
+        dotnet build .
+
+    - name: Test
+      run: |
+        dotnet test assmDep.Test/
