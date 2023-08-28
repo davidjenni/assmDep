@@ -63,7 +63,9 @@ namespace AssmDep
             string name = Path.GetFileName(assembly.Location);
             if (!IncludeSystemAssemblies
                 && (name.StartsWith("System.")
-                || name.StartsWith("mscorlib")))
+                || name.StartsWith("mscorlib")
+                || name.StartsWith("Presentation")
+                ))
             {
                 return false;
             }
