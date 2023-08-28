@@ -21,7 +21,7 @@ namespace AssmDep.Test
             refs.InspectedReferences.Should().BeGreaterThanOrEqualTo(30);
             var fluent = FindReference(refs, "FluentAssertions");
             fluent.Should().NotBeNull();
-            fluent.ReferencedBy.Should().NotBeNull();
+            fluent!.ReferencedBy.Should().NotBeNull();
             fluent.ReferencedBy.Should().Contain("assmDep.Test.dll");
 
             var mscorlib = FindReference(refs, "mscorlib");
@@ -38,23 +38,23 @@ namespace AssmDep.Test
             refs.InspectedReferences.Should().BeGreaterThan(70);
             var fluent = FindReference(refs, "FluentAssertions");
             fluent.Should().NotBeNull();
-            fluent.ReferencedBy.Should().NotBeNull();
+            fluent!.ReferencedBy.Should().NotBeNull();
             fluent.ReferencedBy.Should().Contain("assmDep.Test.dll");
 
 #if NETFRAMEWORK
             var mscorlib = FindReference(refs, "mscorlib");
             mscorlib.Should().NotBeNull();
-            mscorlib.ReferencedBy.Should().NotBeNull();
+            mscorlib!.ReferencedBy.Should().NotBeNull();
             mscorlib.ReferencedBy.Count().Should().BeGreaterThan(70);
 #else
             var netstd = FindReference(refs, "netstandard");
             netstd.Should().NotBeNull();
-            netstd.ReferencedBy.Should().NotBeNull();
+            netstd!.ReferencedBy.Should().NotBeNull();
             netstd.ReferencedBy.Count().Should().BeGreaterThanOrEqualTo(3);
 #endif
         }
 
-        Reference FindReference(AssemblyReferences refs, string name) => refs
+        Reference? FindReference(AssemblyReferences refs, string name) => refs
             .References
             .Where(r => r.AssemblyName.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
             .FirstOrDefault();

@@ -1,6 +1,7 @@
 using System;
 using System.CommandLine;
 using System.IO;
+using System.Linq;
 
 namespace AssmDep
 {
@@ -16,21 +17,26 @@ namespace AssmDep
                 aliases: new[] { "--skipSystem", "-s" },
                 description: "Skip system assemblies from enumeration",
                 getDefaultValue: () => true);
+            var filterOption = new Option<string>(
+                aliases: new[] { "--filter", "-f" },
+                description: "Filter by this assembly name and emit its referencedBy list"
+                );
 
             var cmdParser = new RootCommand("Enumerate all link-time defined references of a .NET assembly")
             {
                 assmOption,
-                skipSystemOption
+                skipSystemOption,
+                filterOption
             };
 
             int exitCode = 99;
-            cmdParser.SetHandler((assemblyFile, skipSystem) => exitCode = Enumerate(assemblyFile, skipSystem),
-            assmOption, skipSystemOption);
+            cmdParser.SetHandler((assemblyFile, skipSystem, filter) => exitCode = Enumerate(assemblyFile, skipSystem, filter),
+            assmOption, skipSystemOption, filterOption);
             cmdParser.Invoke(args);
             return exitCode;
         }
 
-        static int Enumerate(FileInfo assemblyFile, bool skipSystem)
+        static int Enumerate(FileInfo assemblyFile, bool skipSystem, string filter)
         {
             if (assemblyFile == null)
             {
@@ -47,7 +53,21 @@ namespace AssmDep
             Console.WriteLine();
             foreach (var reference in refs.References)
             {
-                Console.WriteLine(reference);
+                Console.WriteLine($"{reference.AssemblyName} - {reference.ReferencedBy.Count} refs");
+            }
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                var filteredRef = refs.References.Where(r => r.AssemblyName.StartsWith(filter, StringComparison.OrdinalIgnoreCase));
+                Console.WriteLine($"Found {filteredRef.Count()} matches:");
+                foreach (var m in filteredRef)
+                {
+                    Console.WriteLine($" = {m.AssemblyName}:");
+                    foreach(var refsBy in m.ReferencedBy)
+                    {
+                        Console.WriteLine($"   - {refsBy}");
+                    }
+                }
             }
             return 0;
         }

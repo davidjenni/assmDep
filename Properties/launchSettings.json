@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "assmDep": {
-      "commandName": "Project",
-      "commandLineArgs": "-a .\\bin\\Debug\\net48\\assmDep.exe",
-      "workingDirectory": "C:\\Src\\assmDep"
-    }
-  }
-}

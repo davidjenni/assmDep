@@ -2,3 +2,4 @@ bin/
 obj/
 .vs/
 *proj.user
+/Properties/launchSettings.json
