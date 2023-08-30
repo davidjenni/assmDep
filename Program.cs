@@ -47,22 +47,30 @@ namespace AssmDep
             var refs = new AssemblyReferences
             { IncludeSystemAssemblies = !skipSystem };
 
-            refs.Enumerate(assemblyFile.FullName);
+            if (!refs.Enumerate(assemblyFile.FullName))
+            {
+                Console.Error.WriteLine($"Cannot find file: {assemblyFile.FullName}.");
+                return 2;
+            }
 
-            Console.WriteLine("Inspected {0} assemblies, found {1} references:", refs.InspectedReferences, refs.ReferencesCount);
+            Console.Write("loaded root assembly:");
+            PrintReference(refs.Root);
+            var inclExcl = refs.IncludeSystemAssemblies ? "incl." : "excl.";
+            Console.WriteLine($"Loaded {refs.InspectedReferences} assembly references, found {refs.ReferencesCount} unique references ({inclExcl} system assemblies):");
             Console.WriteLine();
             foreach (var reference in refs.References)
             {
-                Console.WriteLine($"{reference.AssemblyName} - {reference.ReferencedBy.Count} refs");
+                PrintReference(reference);
+                // Console.WriteLine($"{reference.Name}({reference.Version}/{reference.FileVersion}) - {reference.ReferencedBy.Count} refs");
             }
 
             if (!string.IsNullOrEmpty(filter))
             {
-                var filteredRef = refs.References.Where(r => r.AssemblyName.StartsWith(filter, StringComparison.OrdinalIgnoreCase));
+                var filteredRef = refs.References.Where(r => r.Name.StartsWith(filter, StringComparison.OrdinalIgnoreCase));
                 Console.WriteLine($"Found {filteredRef.Count()} matches:");
                 foreach (var m in filteredRef)
                 {
-                    Console.WriteLine($" = {m.AssemblyName}:");
+                    Console.WriteLine($" = {m.Name}:");
                     foreach(var refsBy in m.ReferencedBy)
                     {
                         Console.WriteLine($"   - {refsBy}");
@@ -70,6 +78,11 @@ namespace AssmDep
                 }
             }
             return 0;
+        }
+
+        static void PrintReference(Reference reference)
+        {
+            Console.WriteLine($"{reference.Name}({reference.Version}/{reference.FileVersion}) - {reference.ReferencedBy.Count} refs");
         }
     }
 }

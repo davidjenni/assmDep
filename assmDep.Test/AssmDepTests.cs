@@ -56,7 +56,7 @@ namespace AssmDep.Test
 
         Reference? FindReference(AssemblyReferences refs, string name) => refs
             .References
-            .Where(r => r.AssemblyName.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
+            .Where(r => r.Name.StartsWith(name, StringComparison.InvariantCultureIgnoreCase))
             .FirstOrDefault();
     }
 }
